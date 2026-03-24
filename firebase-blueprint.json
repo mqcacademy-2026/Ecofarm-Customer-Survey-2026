@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "SurveyResponse": {
+      "title": "Survey Response",
+      "description": "Dữ liệu khảo sát từ khách hàng EcoFarm",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Họ và tên khách hàng" },
+        "email": { "type": "string", "format": "email", "description": "Email khách hàng" },
+        "phone": { "type": "string", "description": "Số điện thoại" },
+        "address": { "type": "string", "description": "Địa chỉ" },
+        "age": { "type": "string", "description": "Độ tuổi" },
+        "occupation": { "type": "string", "description": "Nghề nghiệp" },
+        "interestedGroup": { "type": "string", "description": "Nhóm quan tâm chính" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Thời gian gửi" }
+      },
+      "required": ["fullName", "email", "address", "age", "occupation", "interestedGroup"]
+    }
+  },
+  "firestore": {
+    "/surveys": {
+      "schema": "SurveyResponse",
+      "description": "Bộ sưu tập các phản hồi khảo sát"
+    }
+  }
+}

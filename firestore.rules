@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isValidSurvey(data) {
+      return data.fullName is string && data.fullName.size() > 0 && data.fullName.size() < 200 &&
+             data.email is string && data.email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$") &&
+             data.address is string && data.address.size() > 0 &&
+             data.age is string &&
+             data.occupation is string &&
+             data.interestedGroup in ['agriculture', 'bamboo', 'wellness', 'gacp'];
+    }
+
+    match /surveys/{surveyId} {
+      // Cho phép bất kỳ ai gửi khảo sát (không cần đăng nhập)
+      // Nếu bạn muốn bảo mật hơn, có thể yêu cầu isAuthenticated()
+      allow create: if isValidSurvey(request.resource.data);
+      
+      // Chỉ admin mới có thể xem danh sách khảo sát
+      allow read: if isAuthenticated() && 
+        (request.auth.token.email == "mqc.academy@gmail.com" && request.auth.token.email_verified == true);
+    }
+    
+    match /test/{docId} {
+      allow read: if true;
+    }
+  }
+}
